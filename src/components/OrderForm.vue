@@ -19,11 +19,12 @@
             <h2>Всего: {{this.total}}кг</h2>
             <h3>Кол-во арбузов: {{this.count}}</h3>
             <input placeholder="Введите адрес доставки: " type="text"/>
-            <input placeholder="Введите свой номер телефона: " type="number" />
+            <input placeholder="Введите свой номер телефона: " type="tel" />
             <input type="datetime-local" v-bind:min="this.dateTime" v-bind:max="this.requiredTime" step=1800 />
             <div>
                 <input type="checkbox" /><label>Порезать дольками</label>
             </div>
+            <button>Заказать</button>
             
         </form>
     </div>
@@ -31,10 +32,17 @@
 </template>
 
 <script>
+    import { validationMixin } from 'vuelidate';
+    import { required} from 'vuelidate/lib/validators'
     export default {
         name: 'OrderForm',
+        mixins: [ validationMixin, ],
         data() {
             return {
+                form: {
+                    name: '',
+                    number: ''
+                },
                 total: 0,
                 count: 0,
                 dateTime: '',
@@ -49,13 +57,23 @@
                     {id:6,img: "/images/unripe.png", status: 'unripe', selected: false, weight: this.weight()}
                 ],
                 items2: [
-                    {id:1,img: "#", status: 'ripped', selected: false, weight: this.weight()},
-                    {id:2,img: "/images/ripe.png", status: 'ripe', selected: false, weight: this.weight()},
-                    {id:3,img: "/images/unripe.png", status: 'unripe', selected: false, weight: this.weight()},
-                    {id:4,img: "/images/ripe.png", status: 'ripe', selected: false, weight: this.weight()},
-                    {id:5,img: "/images/unripe.png", status: 'unripe', selected: false, weight: this.weight()},
-                    {id:6,img: "/images/ripe.png", status: 'ripe', selected: false, weight: this.weight()}
+                    {id:7,img: "#", status: 'ripped', selected: false, weight: this.weight()},
+                    {id:8,img: "/images/ripe.png", status: 'ripe', selected: false, weight: this.weight()},
+                    {id:9,img: "/images/unripe.png", status: 'unripe', selected: false, weight: this.weight()},
+                    {id:10,img: "/images/ripe.png", status: 'ripe', selected: false, weight: this.weight()},
+                    {id:11,img: "/images/unripe.png", status: 'unripe', selected: false, weight: this.weight()},
+                    {id:12,img: "/images/ripe.png", status: 'ripe', selected: false, weight: this.weight()}
                 ]
+            }
+        },
+        validations: {
+            form: {
+                name: {
+                    required
+                },
+                number: {
+                    required
+                }
             }
         },
         mounted() {
@@ -120,12 +138,13 @@
                 return Math.floor((Math.random() * 15) + 8);
             },
             select(item) {
-                if(item.status != "ripped" && this.count <= 3){
+                if(item.status != "ripped" && item.selected == false && this.count < 3 && !this.selected.includes(item.id)){
                     this.selected.push(item.id);
-                    
+                    console.log("Object: ", this.selected)
                 }
                 this.selected.forEach(i => {
                     if(i == item.id){
+                        console.log(item.id)
                         item.selected = item.selected ? false : true;
                         if(item.selected){
                             this.total += item.weight;
