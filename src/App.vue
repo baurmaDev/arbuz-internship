@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1>Hello Arbuz!</h1>
+    <h1>Курчумские Арбузы!</h1>
+    <h3>Выберите арбуз с грядки от 1 до 3шт</h3>
     <OrderForm />
   </div>
   
@@ -18,12 +19,16 @@ export default {
 </script>
 
 <style>
+body{
+  background-color: #202020;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #ffff;
   margin-top: 60px;
+  
 }
 </style>
