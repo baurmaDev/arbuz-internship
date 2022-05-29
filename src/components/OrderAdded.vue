@@ -16,11 +16,7 @@
                 success: false
             }
         },
-        // methods: {
-        //     close() {
-        //         this.su
-        //     }
-        // }
+        
     }
 </script>
 <style scoped>

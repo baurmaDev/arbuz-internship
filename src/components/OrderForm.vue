@@ -5,13 +5,14 @@
             <tr>
                 <td  v-for="item of items" :key="item.id"   @click="select(item)" v-bind:class="{selected: item.selected}">
                     <img v-if="item.status !== 'ripped'" :src="item.img" />
-                    
+                    <span>{{item.status}}</span>
                 </td>  
             </tr>
             <tr class="water"></tr>
             <tr>
                 <td v-for="item of items2" :key="item.id" @click="select(item)" v-bind:class="{selected: item.selected}">
                     <img v-if="item.status !== 'ripped'" :src="item.img"/>
+                    <span>{{item.status}}</span>
                 </td>
             </tr>
         </table>
@@ -26,8 +27,8 @@
                 v-bind:class="input_field"
              />
              <p v-if="this.addressError">{{this.addressError}}</p>
-            <input placeholder="Введите свой номер телефона: "
-                type="tel" 
+            <input placeholder="Номер телефона: 8XXX-XXX-XXXX "
+                type="text" 
                 v-model="this.number"
                 v-bind:class="input_field"
               />
@@ -35,7 +36,7 @@
             <input type="datetime-local" v-model="this.date" v-bind:min="this.dateTime" v-bind:max="this.requiredTime" />
             <p v-if="this.dateError">{{this.dateError}}</p>
             <div v-bind:class="{check: true}">
-                <input type="checkbox" /><label>Порезать дольками</label>
+                <input type="checkbox" v-model="this.slice" /><label>Порезать дольками</label>
             </div>
             <button>Заказать</button>
             
@@ -55,6 +56,7 @@ import OrderAdded from "./OrderAdded.vue";
             address: null,
             number: null,
             date: null,
+            slice: false,
             addressError: "",
             numberError: "",
             dateError: "",
@@ -142,9 +144,16 @@ import OrderAdded from "./OrderAdded.vue";
         console.log("Date after: ", this.requiredTime);
     },
     methods: {
+        validatePhoneNumber(input_str) {
+            var re = /^\8?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+
+            return re.test(input_str);
+        },
         checkForm: function (e) {
             e.preventDefault();
-            if (this.address && this.number && this.date) {
+            var phone = this.validatePhoneNumber(this.number);
+            if (this.address && this.number && this.date && phone) {
+                
                 this.success = true;
                 console.log(this.success);
                 console.log(this.address, this.date);
@@ -158,6 +167,9 @@ import OrderAdded from "./OrderAdded.vue";
             }
             if (!this.date) {
                 this.dateError = "Укажите дату и время доставки";
+            }
+            if(!phone){
+                this.numberError = "Неверный формат"
             }
         },
         weight() {
@@ -200,6 +212,35 @@ import OrderAdded from "./OrderAdded.vue";
         height: 6rem;
         background-color: green;
     }
+    @media only screen and (max-width: 500px){
+        table{
+            margin: 0 auto;
+            width: 100%;
+            height: 6rem;
+            background-color: green;
+        }
+    }
+    @media screen and (min-width: 520px) and (max-width: 1000px){
+        table{
+            margin: 0 auto;
+            width: 100%;
+            height: 6rem;
+            background-color: green;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+            width: 600px;
+        }
+        input:not([type='checkbox']) {
+        margin: 10px 0;
+        width: 500px;
+        height: 2rem;
+        padding: 5px 0 5px 8px;
+        border-radius: 10px;
+    }
+    }
     table, th, td {
         border:1px solid black;
     }
@@ -227,6 +268,7 @@ import OrderAdded from "./OrderAdded.vue";
         flex-direction: column;
         margin: 0 auto;
         width: 300px;
+        
     }
     input[type="checkbox"] {
         background-color: #fff;
@@ -282,5 +324,11 @@ import OrderAdded from "./OrderAdded.vue";
         color:red;
         font-size: small;
         margin-top: -8px;
+    }
+    span{
+        visibility: hidden;
+    }
+    td:hover span{
+        visibility: visible;
     }
 </style>
